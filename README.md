@@ -4,12 +4,11 @@ ClinSide is a portable clinical support application for Windows, designed to ass
 
 ## Download
 
-Once a verified release has been published, download **ClinSide-Windows-Portable.zip** from the [Releases page](https://github.com/chlee4658/ClinSide_public/releases).
+Download [**clinside.zip**](https://github.com/chlee4658/ClinSide_public/releases/download/v0.2/clinside.zip) from the latest release.
 
-1. Download the ZIP from the latest release's **Assets**.
-2. Extract it into a writable folder (for example, `D:\\clinside`).
-3. Run `ClinSide-Windows.bat` to start ClinSide.
-4. Use the in-app **ClinSide 종료** button to shut down its local server.
+1. Extract it into a writable folder (for example, `D:\\clinside`).
+2. Run `ClinSide-Windows.bat` to start ClinSide.
+3. Use the in-app **ClinSide 종료** button to shut down its local server.
 
 No Python installation or administrator rights are intended to be required for the portable distribution.
 
