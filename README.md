@@ -4,7 +4,7 @@ ClinSide is a portable clinical support application for Windows, designed to ass
 
 ## Download
 
-Download [**clinside.zip**](https://github.com/chlee4658/ClinSide_public/releases/latest/download/clinside.zip) from the latest release. This is a permanent release download link; Actions artifacts are temporary build files.
+Download [**clinside.zip**](https://github.com/chlee4658/ClinSide_public/raw/refs/heads/main/clinside.zip) from the latest release. This file is updated by pushing the latest distribution ZIP to this repository's main branch. Actions artifacts are temporary build files and are not the public download.
 
 1. Extract it into a writable folder (for example, `D:\\clinside`).
 2. Run `ClinSide-Windows.bat` to start ClinSide.
