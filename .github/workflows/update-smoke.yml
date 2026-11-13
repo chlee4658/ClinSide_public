@@ -1,0 +1,40 @@
+name: Verify Windows update package
+
+on:
+  push:
+    paths:
+      - clinside.zip
+      - .github/workflows/update-smoke.yml
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: windows-latest
+    steps:
+      - name: Download public ZIP and simulate update
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $url = 'https://raw.githubusercontent.com/chlee4658/ClinSide_public/main/clinside.zip'
+          $test = Join-Path $env:RUNNER_TEMP 'clinside-update-smoke'
+          $zip = Join-Path $test 'clinside.zip'
+          $stage = Join-Path $test 'stage'
+          $app = Join-Path $test 'installed'
+          New-Item -ItemType Directory -Force -Path $stage, $app, (Join-Path $app 'data') | Out-Null
+          Set-Content -LiteralPath (Join-Path $app 'data/keep.txt') -Value 'preserve-me'
+          Set-Content -LiteralPath (Join-Path $app 'phrases.html') -Value 'old-version'
+          Invoke-WebRequest -Uri $url -OutFile $zip
+          Expand-Archive -LiteralPath $zip -DestinationPath $stage
+          $phrase = [IO.File]::ReadAllText((Join-Path $stage 'phrases.html'))
+          foreach ($required in @('<option>진료</option><option>메시지</option><option>기타</option>', 'id="copy-draft"')) {
+            if (-not $phrase.Contains($required)) { throw "Public ZIP has an old phrase screen: $required" }
+          }
+          $server = [IO.File]::ReadAllText((Join-Path $stage 'server.py'))
+          if (-not $server.Contains("('진료','메시지','기타')")) { throw 'Public ZIP has old phrase categories in server.py.' }
+          $excluded = @('data','backups','runtime','.git')
+          $syncArgs = @($stage,$app,'/E','/R:1','/W:1','/XD') + @($excluded | ForEach-Object { Join-Path $stage $_ }) + @('/XF','Update_ClinSide_Git.bat')
+          & robocopy @syncArgs
+          if ($LASTEXITCODE -ge 8) { throw 'Update copy failed.' }
+          if ((Get-Content -Raw (Join-Path $app 'data/keep.txt')).Trim() -ne 'preserve-me') { throw 'Existing data was lost.' }
+          if (-not ([IO.File]::ReadAllText((Join-Path $app 'phrases.html'))).Contains('id="copy-draft"')) { throw 'New screen was not copied.' }
+          Write-Host 'Public ZIP is current, new screen copied, and data preserved.'
