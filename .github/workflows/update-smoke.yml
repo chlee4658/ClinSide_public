@@ -26,6 +26,7 @@ jobs:
           Invoke-WebRequest -Uri $url -OutFile $zip
           Expand-Archive -LiteralPath $zip -DestinationPath $stage
           $phrase = [IO.File]::ReadAllText((Join-Path $stage 'phrases.html'))
+          if (-not $phrase.Contains('<section id="editor" class="editor">')) { throw 'Phrase editor is hidden on the default screen.' }
           foreach ($required in @('<option>진료</option><option>메시지</option><option>기타</option>', 'id="copy-draft"')) {
             if (-not $phrase.Contains($required)) { throw "Public ZIP has an old phrase screen: $required" }
           }
