@@ -31,6 +31,10 @@ jobs:
           }
           $server = [IO.File]::ReadAllText((Join-Path $stage 'server.py'))
           if (-not $server.Contains("('진료','메시지','기타')")) { throw 'Public ZIP has old phrase categories in server.py.' }
+          $launcher = [IO.File]::ReadAllText((Join-Path $stage 'launch_clinside.py'))
+          if (-not $launcher.Contains('/api/instance')) { throw 'Public ZIP has an old launcher.' }
+          $companion = [IO.File]::ReadAllText((Join-Path $stage 'companion.js'))
+          if (-not $companion.Contains('/phrases.html?fresh=')) { throw 'Public ZIP has an old phrase panel.' }
           $excluded = @('data','backups','runtime','.git')
           $syncArgs = @($stage,$app,'/E','/R:1','/W:1','/XD') + @($excluded | ForEach-Object { Join-Path $stage $_ }) + @('/XF','Update_ClinSide_Git.bat')
           & robocopy @syncArgs
