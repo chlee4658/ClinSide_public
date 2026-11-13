@@ -40,8 +40,7 @@ jobs:
           $bat = Join-Path $app 'Update_ClinSide_Git.bat'
           $script = [IO.File]::ReadAllText((Join-Path $stage 'Update_ClinSide_Git.bat'))
           $script = [regex]::Replace($script, '(?m)^choice /C YN /M "Continue with update"\r?\nif errorlevel 2 goto :cancel', 'rem Skip confirmation in automated test')
-          $script = [regex]::Replace($script, '(?m)^pause
-, 'rem Skip pause in automated test')
+          $script = [regex]::Replace($script, '(?m)^pause\\s*$', 'rem Skip pause in automated test')
           [IO.File]::WriteAllText($bat, $script)
           Set-Content -LiteralPath (Join-Path $app 'phrases.html') -Value 'old-version'
           & cmd.exe /d /c $bat
