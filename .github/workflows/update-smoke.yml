@@ -38,3 +38,4 @@ jobs:
           if ((Get-Content -Raw (Join-Path $app 'data/keep.txt')).Trim() -ne 'preserve-me') { throw 'Existing data was lost.' }
           if (-not ([IO.File]::ReadAllText((Join-Path $app 'phrases.html'))).Contains('id="copy-draft"')) { throw 'New screen was not copied.' }
           Write-Host 'Public ZIP is current, new screen copied, and data preserved.'
+          exit 0
