@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - clinside.zip
-      - .github/workflows/update-smoke.yml
   workflow_dispatch:
 
 jobs:
@@ -26,12 +25,12 @@ jobs:
           Invoke-WebRequest -Uri $url -OutFile $zip
           Expand-Archive -LiteralPath $zip -DestinationPath $stage
           $phrase = [IO.File]::ReadAllText((Join-Path $stage 'phrases.html'))
-          if (-not $phrase.Contains('<section id="editor" class="editor">')) { throw 'Phrase editor is hidden on the default screen.' }
-          foreach ($required in @('<option>진료</option><option>메시지</option><option>기타</option>', 'id="copy-draft"')) {
+          if (-not $phrase.Contains('새 문구 내용')) { throw 'The blank add row is missing.' }
+          foreach ($required in @('phrase-row', 'rows.push(draftRow)', '＋ 분류 추가', 'setTimeout(commit,800)')) {
             if (-not $phrase.Contains($required)) { throw "Public ZIP has an old phrase screen: $required" }
           }
           $server = [IO.File]::ReadAllText((Join-Path $stage 'server.py'))
-          if (-not $server.Contains("('진료','메시지','기타')")) { throw 'Public ZIP has old phrase categories in server.py.' }
+          if (-not $server.Contains('len(category.strip())>40')) { throw 'Server does not accept user-defined categories.' }
           $launcher = [IO.File]::ReadAllText((Join-Path $stage 'launch_clinside.py'))
           if (-not $launcher.Contains('/api/instance')) { throw 'Public ZIP has an old launcher.' }
           $companion = [IO.File]::ReadAllText((Join-Path $stage 'companion.js'))
