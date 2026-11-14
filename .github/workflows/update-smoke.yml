@@ -40,7 +40,7 @@ jobs:
           & robocopy @syncArgs
           if ($LASTEXITCODE -ge 8) { throw 'Update copy failed.' }
           if ((Get-Content -Raw (Join-Path $app 'data/keep.txt')).Trim() -ne 'preserve-me') { throw 'Existing data was lost.' }
-          if (-not ([IO.File]::ReadAllText((Join-Path $app 'phrases.html'))).Contains('id="copy-draft"')) { throw 'New screen was not copied.' }
+          if (-not ([IO.File]::ReadAllText((Join-Path $app 'phrases.html'))).Contains('rows.push(draftRow)')) { throw 'New screen was not copied.' }
           $bat = Join-Path $app 'Update_ClinSide_Git.bat'
           $script = [IO.File]::ReadAllText((Join-Path $stage 'Update_ClinSide_Git.bat'))
           $script = [regex]::Replace($script, '(?m)^choice /C YN /M "Continue with update"\r?\nif errorlevel 2 goto :cancel', 'rem Skip confirmation in automated test')
