@@ -50,7 +50,7 @@ jobs:
           Set-Content -LiteralPath (Join-Path $app 'phrases.html') -Value 'old-version'
           & cmd.exe /d /c $bat
           if ($LASTEXITCODE -ne 0) { throw "Updater batch failed with exit code $LASTEXITCODE" }
-          if (-not ([IO.File]::ReadAllText((Join-Path $app 'phrases.html'))).Contains('id="copy-draft"')) { throw 'Updater batch did not install the new screen.' }
+          if (-not ([IO.File]::ReadAllText((Join-Path $app 'phrases.html'))).Contains('rows.push(draftRow)')) { throw 'Updater batch did not install the new screen.' }
           if ((Get-Content -Raw (Join-Path $app 'data/keep.txt')).Trim() -ne 'preserve-me') { throw 'Updater batch removed existing data.' }
           Write-Host 'Public ZIP, update copy, and updater batch all passed.'
           exit 0
