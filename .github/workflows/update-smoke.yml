@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - clinside.zip
+      - .github/workflows/update-smoke.yml
   workflow_dispatch:
 
 jobs:
