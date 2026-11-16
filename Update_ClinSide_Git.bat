@@ -9,7 +9,7 @@ echo Close ClinSide and stop its local server before continuing.
 choice /C YN /M "Continue with update"
 if errorlevel 2 goto :cancel
 
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Update_ClinSide_Git.ps1" -AppDir "%APP_DIR%"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0Update_ClinSide_Git.ps1"
 set "RESULT=%ERRORLEVEL%"
 if not "%RESULT%"=="0" goto :failed
 echo.

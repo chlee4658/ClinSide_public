@@ -1,6 +1,9 @@
-param([Parameter(Mandatory=$true)][string]$AppDir)
+param([switch]$ValidatePathOnly)
 $ErrorActionPreference = 'Stop'
-$app = [IO.Path]::GetFullPath($AppDir).TrimEnd('\')
+if ([string]::IsNullOrWhiteSpace($env:APP_DIR)) { throw 'APP_DIR is missing. Launch this script using the update BAT.' }
+$app = [IO.Path]::GetFullPath($env:APP_DIR).TrimEnd('\')
+if (-not (Test-Path -LiteralPath $app -PathType Container)) { throw ('ClinSide folder not found: ' + $app) }
+if ($ValidatePathOnly) { Write-Host ('Valid ClinSide path: ' + $app); exit 0 }
 $url = 'https://raw.githubusercontent.com/chlee4658/ClinSide_public/main/clinside.zip'
 $temp = Join-Path $env:TEMP ('ClinSideUpdate-' + [guid]::NewGuid().ToString('N'))
 $zip = Join-Path $temp 'release.zip'
