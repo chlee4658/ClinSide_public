@@ -29,7 +29,7 @@ exit /b 1
 :end
 pause
 exit /b 0
- } | Sort-Object CreationTimeUtc -Descending); if($completed.Count -gt 3){foreach($older in ($completed | Select-Object -Skip 3)){try{Remove-Item -LiteralPath $older.FullName -Recurse -Force -ErrorAction Stop; Write-Host ('Removed old code backup: '+$older.Name)}catch{Write-Warning ('Could not remove old backup: '+$older.FullName+' - '+$_.Exception.Message)}}}; Write-Host 'Updated from ClinSide_public.'; Write-Host ('Backup: ' + $backup) } catch { Write-Host ('Update failed: ' + $_.Exception.Message); exit 1 } finally { Remove-Item -LiteralPath $temp -Recurse -Force -ErrorAction SilentlyContinue }"
+ } | Sort-Object { if($_.Name -match '(\\d{8}-\\d{6})'){$Matches[1]}else{''} } -Descending); if($completed.Count -gt 3){foreach($older in ($completed | Select-Object -Skip 3)){try{Remove-Item -LiteralPath $older.FullName -Recurse -Force -ErrorAction Stop; Write-Host ('Removed old code backup: '+$older.Name)}catch{Write-Warning ('Could not remove old backup: '+$older.FullName+' - '+$_.Exception.Message)}}}; Write-Host 'Updated from ClinSide_public.'; Write-Host ('Backup: ' + $backup) } catch { Write-Host ('Update failed: ' + $_.Exception.Message); exit 1 } finally { Remove-Item -LiteralPath $temp -Recurse -Force -ErrorAction SilentlyContinue }"
 if errorlevel 1 goto :failed
 echo.
 echo Update complete. Start ClinSide-Windows.bat.
